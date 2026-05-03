@@ -1,0 +1,494 @@
+/* WhyNot Chatbot — Nyaman, hangat, sederhana */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #f0e8dc;
+  --bg-chat: #f7f1e8;
+  --bg-input: #f7f1e8;
+  --bg-user-bubble: #e0d5c5;
+  --bg-assistant-bubble: #ede6da;
+  --bg-hover: #e6ddd0;
+
+  --text: #2c2520;
+  --text-secondary: #6b5e53;
+  --text-muted: #9a8e80;
+
+  --accent: #7c6a52;
+  --accent-light: #a8937a;
+
+  --border: #ddd4c6;
+  --border-focus: #c4b8a5;
+
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'Menlo', 'Consolas', monospace;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tata Letak */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* Header — sederhana dan tenang */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  font-size: 1.2rem;
+}
+
+.logo h1 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.version-badge {
+  font-size: 0.6rem;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--bg-hover);
+  color: var(--text-muted);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.model-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #8bba7c;
+}
+
+/* Area Chat */
+.chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 20px;
+}
+
+.chat-area::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chat-area::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+/* Layar Selamat Datang — hanya teks, tidak terlalu mencolok */
+.welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 20px 40px;
+}
+
+.welcome-icon {
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+.welcome h2 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.welcome p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  max-width: 440px;
+  line-height: 1.65;
+}
+
+.welcome-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.feature-card {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: var(--bg-hover);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  border: none;
+  cursor: default;
+}
+
+.feature-icon {
+  font-size: 0.85rem;
+}
+
+/* Pesan */
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.message {
+  display: flex;
+  gap: 10px;
+  animation: msgIn 0.25s ease;
+}
+
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message.user {
+  flex-direction: row-reverse;
+}
+
+.message-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  background: var(--bg-hover);
+}
+
+.message-content {
+  max-width: 72%;
+  min-width: 0;
+}
+
+.message-bubble {
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.message.assistant .message-bubble {
+  background: var(--bg-assistant-bubble);
+  border-top-left-radius: 4px;
+}
+
+.message.user .message-bubble {
+  background: var(--bg-user-bubble);
+  border-top-right-radius: 4px;
+}
+
+/* Pemformatan konten pesan */
+.message-bubble h1, .message-bubble h2, .message-bubble h3 {
+  margin-top: 10px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+.message-bubble h1 { font-size: 1rem; }
+.message-bubble h2 { font-size: 0.95rem; }
+.message-bubble h3 { font-size: 0.9rem; color: var(--accent); }
+.message-bubble p { margin-bottom: 6px; line-height: 1.45; }
+.message-bubble p:last-child { margin-bottom: 0; }
+.message-bubble ul, .message-bubble ol { padding-left: 18px; margin-bottom: 6px; }
+.message-bubble li { margin-bottom: 2px; line-height: 1.45; }
+.message-bubble code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.05);
+}
+.message-bubble pre {
+  margin: 8px 0;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: #e6ddd0;
+  overflow-x: auto;
+  font-size: 0.8rem;
+}
+.message-bubble pre code { padding: 0; background: none; }
+.message-bubble strong { font-weight: 600; }
+.message-bubble table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 0.8rem; }
+.message-bubble th, .message-bubble td { padding: 6px 10px; text-align: left; border: 1px solid var(--border); }
+.message-bubble th { background: var(--bg-hover); font-weight: 600; }
+.message-bubble hr { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+
+/* Mengetik */
+.typing-indicator {
+  display: flex;
+  gap: 4px;
+  padding: 12px 16px;
+}
+.typing-indicator span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  animation: typeDot 1.2s ease-in-out infinite;
+}
+.typing-indicator span:nth-child(2) { animation-delay: 0.15s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes typeDot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+  30% { transform: translateY(-4px); opacity: 0.8; }
+}
+
+/* Bilah Pratinjau File */
+.file-preview-bar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px;
+  background: var(--bg-hover);
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+}
+.file-preview-bar.active { display: flex; }
+.file-preview-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  min-width: 0;
+}
+.file-preview-icon { font-size: 0.9rem; flex-shrink: 0; }
+.file-preview-name {
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.file-preview-meta { color: var(--text-muted); white-space: nowrap; }
+.file-preview-remove {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  transition: color 0.15s;
+}
+.file-preview-remove:hover { color: #c0705b; }
+
+/* Area Input */
+.input-area {
+  padding: 14px 20px 10px;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  position: relative;
+}
+
+.drop-zone-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: rgba(240, 232, 220, 0.92);
+  border: 2px dashed var(--accent-light);
+  border-radius: var(--radius);
+  align-items: center;
+  justify-content: center;
+}
+.drop-zone-overlay.active { display: flex; }
+.drop-zone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+.drop-icon { font-size: 1.5rem; }
+
+.input-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 5px 5px 5px 4px;
+  transition: border-color 0.15s;
+}
+.input-container:focus-within {
+  border-color: var(--border-focus);
+}
+
+.upload-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.upload-btn:hover { color: var(--accent); }
+
+.chat-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  resize: none;
+  max-height: 120px;
+  padding: 7px 0;
+}
+.chat-input::placeholder { color: var(--text-muted); }
+
+.send-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.send-btn:hover:not(:disabled) { opacity: 0.85; }
+.send-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+.disclaimer {
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  padding: 8px 0 2px;
+  line-height: 1.5;
+}
+
+/* Loading saat mengunggah */
+.upload-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(240, 232, 220, 0.88);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.upload-loading .spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.upload-loading span { font-size: 0.85rem; color: var(--text-secondary); }
+
+/* Notifikasi Singkat (Toast) */
+.toast {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 500;
+  animation: toastIn 0.2s ease, toastOut 0.2s ease 3.8s forwards;
+  max-width: 90%;
+  text-align: center;
+}
+.toast.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b45454;
+}
+.toast.success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #548a5e;
+}
+@keyframes toastIn { from { opacity: 0; transform: translate(-50%, -10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* Responsif */
+@media (max-width: 640px) {
+  .header { padding: 12px 14px; }
+  .chat-area { padding: 16px 14px; }
+  .input-area { padding: 10px 14px 8px; }
+  .welcome { padding: 50px 14px 30px; }
+  .message-content { max-width: 85%; }
+}
