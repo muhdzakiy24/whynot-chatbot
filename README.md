@@ -3,9 +3,9 @@
 Whynot-chatbot adalah proyek chatbot keuangan yang dibuat untuk memenuhi proyek akhir dari **Maju Bareng AI for Developers batch 2 May** dari **Hacktiv8**. Whynot-chatbot dilengkapi dengan kemampuan membaca file PDF dan CSV dari bank untuk memahami keadaan finansial pengguna. Semua chat bersifat ephemeral atau sementara.
 
 > ⚠️ **Disclaimer**: WhyNot bukan penasihat keuangan. Semua analisis bersifat informatif dan edukatif. Selalu konsultasikan dengan penasihat keuangan profesional yang terdaftar di OJK untuk keputusan keuangan penting.
-![Chat example](assets/chat.png)
-## Fitur
 
+## Fitur
+![Chat example](assets/chat.png)
 - 📄 **Upload PDF/CSV** — Baca mutasi rekening atau laporan keuangan dari bank
 - 📊 **Analisis Arus Kas** — Ringkasan pemasukan, pengeluaran, dan rasio tabungan
 - 🏷️ **Kategorisasi Otomatis** — Pengelompokan transaksi (makanan, transportasi, belanja, dll)
